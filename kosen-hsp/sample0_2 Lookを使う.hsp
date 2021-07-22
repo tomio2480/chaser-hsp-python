@@ -1,0 +1,40 @@
+;	sample.hsp
+
+address = "127.0.0.1"				;IPアドレス
+port = 2009							;ポート番号の設定
+socknum = 0							;ソケットID番号
+teamname = "Cool"					;チーム名
+
+#include "hspsock.as"
+#include "root/Connect.hsp"
+#include "root/method.hsp"
+#include "root/connectwindow.hsp"
+#include "root/playwindow.hsp"
+
+*main
+	Connect						;サーバーに接続します
+
+	checkgame = checkEnd()
+	repeat
+		if system_check == 1 : break 
+		wait 10
+	loop
+	wait 200
+	while (checkgame == 1 )		;ゲームが続いている間回り続ける
+		getReady
+		;================
+		LookRight
+		;================
+		
+		;デバッグログに周辺情報を記録します
+		logstring = ""
+		foreach Value
+			logstring = logstring + str(Value.cnt)
+		loop
+		logmes(logstring)
+		;ここまで
+		checkgame = checkEnd()
+	wend
+	
+	endGame
+	

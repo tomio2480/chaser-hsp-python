@@ -1,0 +1,73 @@
+;	sample.hsp
+
+address = "127.0.0.1"				;IPアドレス
+port = 2009							;ポート番号の設定
+socknum = 0							;ソケットID番号
+teamname = "Cool"					;チーム名
+
+#include "hspsock.as"
+#include "root/Connect.hsp"
+#include "root/method.hsp"
+#include "root/connectwindow.hsp"
+#include "root/playwindow.hsp"
+
+
+mode = "up"
+
+*main
+	Connect						;サーバーに接続します
+
+	checkgame = checkEnd()
+	repeat
+		if system_check == 1 : break 
+		wait 10
+	loop
+	wait 200
+	
+	while (checkgame == 1 )		;ゲームが続いている間回り続ける
+		getReady
+		;================
+		if (mode == "up" && Value@.2 == 2){
+			mode = "left"
+		}
+		if (mode == "left" && Value@.4 == 2){
+			mode = "down"
+		}
+		if (mode == "down" && Value@.8 == 2){
+			mode = "right"
+		}
+		if (mode == "right" && Value@.6 == 2){
+			mode = "up"
+		}
+		if (mode == "up" && Value@.2 == 2){
+			mode = "left"
+		}
+	
+		if (Value@.2 == 3){
+			mode = "up"
+		}
+		if (Value@.4 == 3){
+			mode = "left"
+		}
+		if (Value@.6 == 3){
+			mode = "right"
+		}
+		if (Value@.8 == 3){
+			mode = "down"
+		}
+	
+		if (mode == "up"){
+			walkUp
+		}else : if(mode == "left"){
+			walkLeft
+		}else : if(mode == "down"){
+			walkDown
+		}else : if(mode == "right"){
+			walkRight
+		}
+		;================
+		checkgame = checkEnd()
+	wend
+	
+	endGame
+	

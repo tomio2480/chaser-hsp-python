@@ -1,0 +1,82 @@
+;	sample.hsp
+
+address = "127.0.0.1"				;IPアドレス
+port = 2009							;ポート番号の設定
+socknum = 0							;ソケットID番号
+teamname = "Cool"					;チーム名
+
+#include "hspsock.as"
+#include "root/Connect.hsp"
+#include "root/method.hsp"
+#include "root/connectwindow.hsp"
+#include "root/playwindow.hsp"
+
+*main
+	Connect						;サーバーに接続します
+
+	checkgame = checkEnd()
+	repeat
+		if system_check == 1 : break 
+		wait 10
+	loop
+	wait 200
+	while (checkgame == 1 )		;ゲームが続いている間回り続ける
+		getReady
+		;================
+		blank = 0
+		enemy = 1
+		block = 2
+		item =  3
+
+		up = 2
+		left = 4
+		right = 6
+		down = 8
+
+		dir = up
+
+		; ブロックをよける
+		if(Value@.up == block){ ;上方向（Value@.2）に壁（2）があったら
+			dir = left; 左に向く
+		}
+		if(Value@.left == block){
+			dir = right
+		}
+		if(Value@.right == block){
+			dir = down
+		}
+		if(Value@.down == block){
+			dir = up
+		}
+
+
+		; アイテムをとる
+		if(Value@.up == item){ ;上方向にアイテムがあったら
+			dir = up; 上に向く
+		}
+		if(Value@.left == item){
+			dir = left
+		}
+		if(Value@.right == item){
+			dir = right
+		}
+		if(Value@.down == item){
+			dir = down
+		}
+
+		; 実際に移動する
+		if(dir == left){ 
+			walkLeft
+		}else:if(dir == right){
+			walkRight
+		}else:if(dir == down){
+			walkDown
+		}else:if(dir == up){
+			walkUp
+		}
+		;================
+		
+	wend
+	
+	endGame
+	

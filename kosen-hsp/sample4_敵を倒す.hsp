@@ -1,0 +1,97 @@
+;	sample.hsp
+
+address = "127.0.0.1"				;IPアドレス
+port = 2009							;ポート番号の設定
+socknum = 0							;ソケットID番号
+teamname = "cool"					;チーム名
+
+#include "hspsock.as"
+#include "root/Connect.hsp"
+#include "root/method.hsp"
+#include "root/connectwindow.hsp"
+#include "root/playwindow.hsp"
+
+
+movemode = "up"
+putmode = "off"
+
+*main
+	Connect						;サーバーに接続します
+
+	checkgame = checkEnd()
+	repeat
+		if system_check == 1 : break 
+		wait 10
+	loop
+	wait 200
+	
+	while (checkgame == 1 )		;ゲームが続いている間回り続ける
+		getReady
+		;================
+		if (movemode == "up" && Value@.2 == 2){
+			movemode = "left"
+		}
+		if (movemode == "left" && Value@.4 == 2){
+			movemode = "down"
+		}
+		if (movemode == "down" && Value@.8 == 2){
+			movemode = "right"
+		}
+		if (movemode == "right" && Value@.6 == 2){
+			movemode = "up"
+		}
+		if (movemode == "up" && Value@.2 == 2){
+			movemode = "left"
+		}
+	
+		if (Value@.2 == 3){
+			movemode = "up"
+		}
+		if (Value@.4 == 3){
+			movemode = "left"
+		}
+		if (Value@.6 == 3){
+			movemode = "right"
+		}
+		if (Value@.8 == 3){
+			movemode = "down"
+		}
+	
+		if (Value@.2 == 1){
+			putmode = "up"
+		}else : if(Value@.4 == 1){
+			putmode = "left"
+		}else : if(Value@.6 == 1){
+			putmode = "right"
+		}else : if(Value@.8 == 1){
+			putmode = "down"
+		}else{
+			putmode = "off"
+		}
+		if(putmode == "off"){
+			if (movemode == "up"){
+				walkUp
+			}else : if(movemode == "left"){
+				walkLeft
+			}else : if(movemode == "down"){
+				walkDown
+			}else : if(movemode == "right"){
+				walkRight
+			}
+		}else{
+			if (putmode == "up"){
+				putUp
+			}else : if(putmode == "left"){
+				putLeft
+			}else : if(putmode == "down"){
+				putDown
+			}else : if(putmode == "right"){
+				putRight
+			}
+		}
+		;================
+		checkgame = checkEnd()
+	wend
+	
+	endGame
+	
