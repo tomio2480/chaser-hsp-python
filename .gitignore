@@ -1,3 +1,4 @@
 .DS_Store
 kosen-hsp/obj
 kosen-hsp/hsptmp
+__pycache__/
