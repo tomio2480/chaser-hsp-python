@@ -1,0 +1,65 @@
+#module
+
+#deffunc Connect
+	title "Dialog"
+	screen 0, 370, 155, 0, 360, 200
+	color 200, 200, 200
+	boxf 0, 0, 640, 480
+	
+	color 50, 50, 50: boxf 15, 10, 355, 110
+	color 200, 200, 200: boxf 16, 11, 354, 109
+	
+	color 0, 0, 0 :pos 35, 20 :font "MS ゴシック",21, 0
+	mes "接続状況" :mes "IP" :mes "Port":mes "Sock"
+	pos 140, 20 :font "MS ゴシック", 21, 1
+	mes ":": mes ":": mes ":":mes ":"
+	pos 150, 20: font msgothic, 20, 0
+	mes "待機中"
+	pos 150, 42
+	;mes address@
+	input address@,100,22
+	pos 150, 64
+	;mes port@
+	input port@,100,22
+	pos 150, 86
+	mes socknum@
+	
+	pos 40, 117
+	objsize 110, 30
+	button gosub "接続開始", *Sconnect
+	
+	pos 220, 117
+	objsize 110, 30
+	button gosub "ゲーム開始", *startGame
+	
+	objenable 3, 0
+	
+	onexit *disconnect
+	
+	return
+	
+	
+	
+*Sconnect
+	serverConnect
+	dialog "接続しました\nIP 　　: "+address@+"\nポート　: "+port@+"\nチーム名: "+teamname@, 0, "接続状況"
+	objprm 2,"接続中"
+	;ゲーム開始ボタンを押せるようにする
+	objenable 3, 1
+	;ボックス操作をさせない
+	objenable 0, 0
+	objenable 1, 0
+	;接続中ボタンを固定
+	objenable 2, 0
+	return
+
+*startGame
+	players_window
+	system_check@ == 1
+	return
+	
+*disconnect
+	endGame
+	end
+
+#global

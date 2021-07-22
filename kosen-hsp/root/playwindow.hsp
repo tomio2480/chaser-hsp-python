@@ -1,0 +1,72 @@
+#module
+
+#deffunc players_window
+	screen 0, 640, 480, 0, 360, 200
+	cls 
+	color 180, 180, 180
+	boxf 0, 0, 160, 500
+	
+	//--------画像用意--------
+	buffer 10
+		picload "./picture/floor1.jpg"
+	buffer 12
+		picload "./picture/block1.jpg"
+	buffer 13
+		picload "./picture/item1.jpg"
+	buffer 11
+		picload "./picture/hot1.jpg"
+	buffer 14
+		picload "./picture/cool1.jpg"
+
+	gsel 0, 1
+	
+	;========左側========
+	;ターン数の箱
+	color 50, 50, 50: boxf 20, 10, 160-20, 80
+	color 230, 230, 230: boxf 21, 11, 160-20-1, 80-1
+	color 0, 0, 0: font "MS ゴシック", 26, 0
+	pos 80-(center_word("TURN")*8), 12		;かける数は適当に決めた
+	mes "TURN"
+	pos 80-(center_word("000")*18/2), 40: font "MS ゴシック", 36, 0
+	mes "---"
+	
+	;====================
+	;プレイヤー情報
+	pos 15, 110: color 0, 0, 0: font "MS ゴシック",25, 0
+	mes teamname@
+	pos 15, 140: mes "Item :"
+	pos 80, 140: mes "000"
+	
+	line 10, 230, 160-10, 230
+	line 10, 462, 160-10, 462
+	pos 80-(center_word("～History～")*5), 205:font msgothic, 20, 0
+	mes "～History～"
+	repeat 10
+		pos 14, 240+(cnt*22): font msgothic, 15, 0
+		mes "000 : ----------"
+	loop
+	;========右側========
+	;初期はなんの情報もないので、黒かなにかで塗りつぶす感じがいいかもしれない
+	;決まるまではブロックで開始する
+	repeat 3
+		y=cnt
+		repeat 3
+			pos 160+30+cnt*iconsize@, 30+y*iconsize@
+			gzoom iconsize@, iconsize@, (10 + 2), 0, 0, 400, 400, 1
+			if (y=1 && cnt=1){
+				pos 160+30+cnt*iconsize@, 30+y*iconsize@
+				gzoom iconsize@, iconsize@, (10 + 4), 0, 0, 400, 400, 1
+			}	
+		loop
+	loop
+
+	screen 5, iconsize@*4, iconsize@*4, 2, , , ,
+	screen 6, iconsize@*3, iconsize@*3, 2, , , ,
+	
+	return
+	
+#defcfunc center_word str moji
+	return strlen(moji)
+	
+
+#global

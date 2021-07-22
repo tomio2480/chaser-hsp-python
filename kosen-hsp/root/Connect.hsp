@@ -1,0 +1,154 @@
+;通信に必要な情報
+;address = "169.254.20.10"				;アドレスの設定
+;address = "192.168.0.7"				;アドレスの設定
+;マップ情報
+dim value, 10
+value = 1, 0, 0, 0, 0, 0, 0, 0, 0, 0
+;iconsize = 30						;アイコンのサイズ
+iconsize = 140
+mapx = 15 + 2						;マップの横マスの数
+mapy = 17 + 2						;マップの縦マスの数
+dim map, mapx, mapy					;マップの情報
+plyx = 4							;プレイヤーのx座標
+plyy = 5							;プレイヤーのy座標
+;システムにかかわる部分
+players_turn = 0					;現在のターン数
+system_check = 0					;ゲームの開始を知らせる
+players_item = 0					;アイテム数
+
+isgr = 0							;多重gr防止策 0->getReady 1->method
+
+
+
+;======改行コードの設定======
+;検証した結果、OSや機種によって若干異なる可能性がある。
+;"\r\n"で動作するものと"\n"で動作するものがあり、
+;接続できずにタイムアウトしてしまう場合はこちらから変更する必要あり
+;method.hspのlfc変数で変更可能です
+;============================
+
+#module
+#include "hspsock.as"
+
+;通信に使用される関数
+#deffunc serverConnect
+	sockopen socknum@, address@, port@;接続の開始，結果はstatに保存される
+	;接続できていなかった場合に接続できるまで繰り返す
+	if stat != 0 {
+		repeat
+			;if stat : mes "接続できていません"	
+			sockopen socknum@, address@, port@
+			if stat = 0 : break
+			wait 5
+		loop
+	}
+	
+	color 200, 200, 200: boxf 150, 20, 350, 40
+	pos 150, 20: color 0, 0, 0: mes "接続完了"
+	
+	;チーム名の送信
+	;全角なら先頭4文字、半角なら先頭8文字が有効になる
+	;mes "チーム名を送信:" + teamname@
+	sockput teamname@, socknum@ 
+	if stat != 0 : dialog "チーム名の送信に失敗しました" : stop
+	
+	return
+	
+;競技が続いているかを確認する関数
+#defcfunc checkEnd
+	players_turn@+=1
+	if value@.0 == 0 {
+		;mes "chedkEnd : End"
+		return -1
+	} else {
+		;mes "checkEnd : not End"
+		return 1
+	}
+	
+#deffunc grjudge
+	if isgr@ == 1 : dialog "エラー：getReadyの2重呼び出し" : stop
+	return
+;自分のターンが着たことを確認
+;grを送り、周囲の情報を得る
+#deffunc getReady
+	grjudge
+	gsel 0, 0
+	;ターン数を変更します
+	color 230, 230, 230: boxf 25, 40, 135, 78
+	color :	pos 80-(center_word("AAA")*18/2), 40: font "MS ゴシック", 36, 0
+	mes strf("%03d", players_turn@)
+	;mes players_turn
+	
+	;サーバーから受信するまで待ちます
+	;mes "受信待ち……"
+	repeat
+		sockcheck socknum@		;ソケットの状態を調べる，結果はstatに保存される
+		if stat = 0 : break 
+		wait 10
+	loop
+	;自分のターンを待ちます
+	cmnd = ""
+	do
+		sockget cmnd, socknum@	;ソケットから受信する，エラーが発生した場合は0以外がstatに保存される
+		if stat != 0 { dialog "ターンの開始を受信できませんでした" : stop}
+		wait 5
+	until (cmnd != "@")			;		(mes "サーバーからの応答を待っています（現在の受信文字列:" + cmnd + "）")
+
+	//debug_stat@ = 1	
+	;grを送ります
+	sockput "gr"+lfc@, socknum@
+	if stat != 0 : dialog "grを送るのに失敗しました" : stop
+	
+	;周囲の情報を受け取ります
+	sockget cmnd, socknum@
+	if stat != 0 : dialog "周囲の情報を受け取るのに失敗しました" : stop
+	
+	;得た文字列の情報を配列に入れます
+	repeat 10
+		value@.cnt = int(strmid(cmnd, cnt, 1))
+	loop
+	
+	;受け取った情報からマップを更新します
+	gsel 0, 0
+	repeat 3
+		y=cnt
+		repeat 3
+			pos 160+30+cnt*iconsize@, 30+y*iconsize@
+			gzoom iconsize@, iconsize@, (10 + value@(cnt+1+y*3)), 0, 0, 400, 400, 1
+		loop
+	loop
+	gsel 6, 0: gcopy 0, 160+30, 30, iconsize@*3, iconsize@*3;背景を仮想ウィンドウにコピー
+	gsel 0, 0: pos 160+30+iconsize@, 30+iconsize@
+	gzoom iconsize@, iconsize@, (10 + 4), 0, 0, 400, 400, 1	;プレイヤーアイコン
+	;wait 50
+	
+	;getReadyを1回行ったことを示す
+	isgr@ = 1
+	
+	return
+	
+;ターン終了後の処理
+#deffunc endTurn
+	;周囲の情報を受け取ります
+	sockget cmnd, socknum@
+	if stat != 0 : dialog "周囲の情報を受け取るのに失敗しました" : stop
+	
+	;得た文字列の情報を配列に入れます
+	repeat 10
+		value@.cnt = int(strmid(cmnd, cnt, 1))
+	loop
+	
+	sockput "#"+lfc@, socknum@
+	if stat != 0 : dialog "ターンの終了に失敗しました"	: stop
+	
+	;method呼び出しを示す
+	isgr@ = 0
+
+	return
+
+;通信の終了
+#deffunc endGame
+	sockclose socknum@
+	return
+	
+#global

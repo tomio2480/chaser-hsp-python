@@ -1,0 +1,240 @@
+dim method_check,2
+;======改行コードの設定======
+;検証した結果、OSや機種によって若干異なる可能性がある。
+;"\r\n"で動作するものと"\n"で動作するものがあり、
+;接続できずにタイムアウトしてしまう場合はこちらから変更する必要あり
+;Connect.hspにも改行コードが用いられてます
+lfc@ = ""
+lfc = "\n"
+;============================
+#module
+#include "hspsock.as"
+;========メソッドです========
+;walkです
+	#deffunc MethodJudge
+		if isgr@ == 0 : dialog "エラー：メソッドの2重呼び出し" : stop
+		return
+
+	#deffunc walkUp
+		MethodJudge
+		sockput "wu"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : walkUp"
+		if (value@.2==3){
+			players_item@++
+			color 180, 180, 180:pos 80, 140
+			boxf 80, 140, 160, 170
+			color 0, 0, 0: font "MS ゴシック",25, 0
+			pos 80, 140: mes strf("%03d", players_item@)
+		}
+		method_check@.0 = 1: method_check@.1 = 2
+		endTurn
+		return
+	
+	#deffunc walkDown
+		MethodJudge
+		sockput "wd"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : walkDown"
+		if (value@.8==3){
+			players_item@++
+			color 180, 180, 180:pos 80, 140
+			boxf 80, 140, 160, 170
+			color 0, 0, 0: font "MS ゴシック",25, 0
+			pos 80, 140: mes strf("%03d", players_item@)
+		}
+		method_check@.0 = 1: method_check@.1 = 8
+		endTurn
+		return
+	
+	#deffunc walkRight
+		MethodJudge
+		sockput "wr"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : walkRight"
+		if (value@.6==3){
+			players_item@++
+			color 180, 180, 180:pos 80, 140
+			boxf 80, 140, 160, 170
+			color 0, 0, 0: font "MS ゴシック",25, 0
+			pos 80, 140: mes strf("%03d", players_item@)
+		}
+		method_check@.0 = 1: method_check@.1 = 6
+		endTurn
+		return
+
+	#deffunc walkLeft
+		MethodJudge
+		sockput "wl"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : walkLeft"
+		if (value@.4==3){
+			players_item@++
+			color 180, 180, 180:pos 80, 140
+			boxf 80, 140, 160, 170
+			color 0, 0, 0: font "MS ゴシック",25, 0
+			pos 80, 140: mes strf("%03d", players_item@)
+		}
+		method_check@.0 = 1: method_check@.1 = 4
+		endTurn
+		return
+
+		
+;putです
+	#deffunc putUp
+		MethodJudge
+		sockput "pu"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : putUp"
+		endTurn
+		return
+	
+	#deffunc putDown
+		MethodJudge
+		sockput "pd"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : putDown"
+		endTurn
+		return
+	
+	#deffunc putRight
+		MethodJudge
+		sockput "pr"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : putRight"
+		endTurn
+		return
+	
+	#deffunc putLeft
+		MethodJudge
+		sockput "pl"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : putLeft"
+		endTurn
+		return	
+		
+;searchです
+	#deffunc searchUp
+		MethodJudge
+		sockput "su"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : searchUp"
+		endTurn
+		return
+	
+	#deffunc searchDown
+		MethodJudge
+		sockput "sd"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : searchDown"
+		endTurn
+		return
+	
+	#deffunc searchRight
+		MethodJudge
+		sockput "sr"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : searchRight"
+		endTurn
+		return
+
+	#deffunc searchLeft
+		MethodJudge
+		sockput "sl"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : searchLeft"
+		endTurn
+		return
+
+
+;lookです
+	#deffunc lookUp
+		MethodJudge
+		sockput "lu"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : lookUp"
+		endTurn
+		return
+	
+	#deffunc lookDown
+		MethodJudge
+		sockput "ld"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : lookDown"
+		endTurn
+		return
+
+	#deffunc lookRight
+		MethodJudge
+		sockput "lr"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : lookRight"
+		endTurn
+		return
+
+	#deffunc lookLeft
+		MethodJudge
+		sockput "ll"+lfc@, socknum@
+		if stat != 0 : dialog "メソッドの送信に失敗しました" : goto stop
+		if (players_turn@\10!=0) {color 180, 180, 180: boxf 14, 240+pos_of_x()+22, 160, 240+pos_of_x()+44}
+		color 180, 180, 180: boxf 14, 240+pos_of_x(), 160, 240+pos_of_x()+22
+		pos 14, 240+pos_of_x(): font msgothic, 15, 0
+		color: mes strf("%03d", players_turn@) + " : lookLeft"
+		endTurn
+		return
+		
+	
+;y座標を求めるための関数です
+	#defcfunc pos_of_x
+		if (players_turn@\10 == 0){
+			return 9 * 22
+		} else {
+			return ((players_turn@)\10)*22 - 22
+		}
+
+#global
