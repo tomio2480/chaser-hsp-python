@@ -78,9 +78,6 @@ def main():
             dir = down
             mode = "put"
 
-        print(f"dir:{dir}, mode:{mode}")
-
-
         if mode == "walk":
             # 実際に移動する
             if dir == left:
