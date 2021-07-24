@@ -37,7 +37,7 @@ def main():
 
         # ブロックをよける
         if value[up] == block: # 自らのupにブロックがあるとき
-            dir = left # 左に動くモードに変更する
+            dir = left # 左を向く
     
         if value[left] == block:
             dir = right
@@ -49,8 +49,8 @@ def main():
             dir = up
 
         # アイテムをとる
-        if(value[up] == item): # 自らのupにアイテムがあるとき
-            dir = up # 上に動くモードに変更する
+        if(value[up] == item): # 自らの上にアイテムがあるとき
+            dir = up # 上を向く
 
         if(value[left] == item):
             dir = left
