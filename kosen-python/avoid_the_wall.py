@@ -29,11 +29,9 @@ def main():
     right = 5
     down = 7
 
-    dir = up 
-
-
     while(True):
         value = client.get_ready()
+        dir = up
 
         if value[up] == block: #自らのupにブロックがあるとき
             dir = left # 左に動くモードに変更する

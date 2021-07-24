@@ -30,11 +30,9 @@ def main():
     right = 5
     down = 7
 
-    dir = up 
-
-
     while(True):
         value = client.get_ready() # サーバに行動準備が完了したと伝える
+        dir = up
 
         # ブロックをよける
         if value[up] == block: # 自らのupにブロックがあるとき
