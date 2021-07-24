@@ -78,6 +78,7 @@ def main():
             dir = down
             mode = "put"
 
+        # モードをもとに行動する
         if mode == "walk":
             # 実際に移動する
             if dir == left:
