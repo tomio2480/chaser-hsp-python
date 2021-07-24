@@ -1,7 +1,7 @@
 import CHaser
 
 def main():
-    velue = []
+    value = []
     client = CHaser.Client()
 
     # マスの状態を変数に格納する
