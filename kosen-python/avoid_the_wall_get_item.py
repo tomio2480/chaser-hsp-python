@@ -30,7 +30,7 @@ def main():
     right = 5
     down = 7
 
-    mode = up # hsp版ではmodeではなくdirとなっていることに注意
+    dir = up 
 
 
     while(True):
@@ -38,35 +38,35 @@ def main():
 
         # ブロックをよける
         if value[up] == block: # 自らのupにブロックがあるとき
-            mode = left # 左に動くモードに変更する
+            dir = left # 左を向く
     
         if value[left] == block:
-            mode = right
+            dir = right
         
         if value[right] == block:
-            mode = down
+            dir = down
 
         if value[down] == block:
-            mode = up
+            dir = up
 
         # アイテムをとる
         if(value[up] == item): # 自らのupにアイテムがあるとき
-            mode = up # 上に動くモードに変更する
+            dir = up # 上を向く
         if(value[left] == item):
-            mode = left
+            dir = left
         if(value[right] == item):
-            mode = right
+            dir = right
         if(value[down] == item):
-            mode = down
+            dir = down
 
         # 実際に移動する
-        if mode == left:
+        if dir == left:
             value = client.walk_left()
-        elif mode == right:
+        elif dir == right:
             value = client.walk_right()
-        elif mode == down:
+        elif dir == down:
             value = client.walk_down()
-        elif mode == up:
+        elif dir == up:
             value = client.walk_up()
 
 
