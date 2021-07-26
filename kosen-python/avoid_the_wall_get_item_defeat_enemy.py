@@ -30,7 +30,7 @@ def main():
     right = 5
     down = 7
 
-    while(True):
+    while True:
         value = client.get_ready() # サーバに行動準備が完了したと伝える
         dir = up
         mode = "walk"
@@ -49,16 +49,16 @@ def main():
             dir = up
 
         # アイテムをとる
-        if(value[up] == item): # 自らの上にアイテムがあるとき
+        if value[up] == item: # 自らの上にアイテムがあるとき
             dir = up # 上を向く
 
-        if(value[left] == item):
+        if value[left] == item:
             dir = left
 
-        if(value[right] == item):
+        if value[right] == item:
             dir = right
 
-        if(value[down] == item):
+        if value[down] == item:
             dir = down
 
         # 敵のほうを向いて、モードを変える
@@ -90,7 +90,7 @@ def main():
             elif dir == up:
                 value = client.walk_up()
         elif mode == "put":
-            # 実際に移動する
+            # 実際にブロックを置く
             if dir == left:
                 value = client.put_left()
             elif dir == right:

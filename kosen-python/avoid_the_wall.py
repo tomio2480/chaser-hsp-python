@@ -29,22 +29,18 @@ def main():
     right = 5
     down = 7
 
-    while(True):
+    while True:
         value = client.get_ready()
         dir = up
 
         if value[up] == block: #自らのupにブロックがあるとき
             dir = left # 左に動くモードに変更する
-    
         if value[left] == block:
             dir = right
-        
         if value[right] == block:
             dir = down
-
         if value[down] == block:
             dir = up
-    
 
         if dir == left:
             value = client.walk_left()
@@ -54,8 +50,6 @@ def main():
             value = client.walk_down()
         elif dir == up:
             value = client.walk_up()
-
-
 
 if __name__ == "__main__":
     main()

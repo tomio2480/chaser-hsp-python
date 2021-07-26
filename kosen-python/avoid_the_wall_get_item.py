@@ -30,32 +30,29 @@ def main():
     right = 5
     down = 7
 
-    while(True):
+    while True:
         value = client.get_ready() # サーバに行動準備が完了したと伝える
         dir = up
 
         # ブロックをよける
         if value[up] == block: # 自らのupにブロックがあるとき
             dir = left # 左を向く
-    
         if value[left] == block:
             dir = right
-        
         if value[right] == block:
             dir = down
-
         if value[down] == block:
             dir = up
-
+            
         # アイテムをとる
-        if(value[up] == item): # 自らのupにアイテムがあるとき
+        if value[up] == item: # 自らのupにアイテムがあるとき
             dir = up # 上を向く
-        if(value[left] == item):
+        if value[left] == item:
             dir = left
-        if(value[right] == item):
+        if value[right] == item:
             dir = right
-        if(value[down] == item):
-            dir = down
+        if value[down] == item:
+          dir = down
 
         # 実際に移動する
         if dir == left:
@@ -66,8 +63,6 @@ def main():
             value = client.walk_down()
         elif dir == up:
             value = client.walk_up()
-
-
 
 if __name__ == "__main__":
     main()

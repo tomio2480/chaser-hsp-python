@@ -4,10 +4,10 @@ def main():
     value = []
     client = CHaser.Client()
 
-    while(True):
+    while True:
         value = client.get_ready()
 
-        if(value[1] == 2): # 上のマスがブロックか確認
+        if value[1] == 2: # 上のマスがブロックか確認
             # ブロックの場合、左にwalkする
             value = client.walk_left()
         else:

@@ -6,7 +6,7 @@ def main():
 
     mode = "up" #最初のモードを指定する。
 
-    while(True):
+    while True:
         value = client.get_ready()
 
         # 指定されたモードの方向にブロックがあるかを確認する。

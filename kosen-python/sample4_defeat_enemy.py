@@ -7,7 +7,7 @@ def main():
     move_mode = "up"
     put_mode = "off"
 
-    while(True):
+    while True:
         value = client.get_ready()
         
         if move_mode == "up" and value[1] == 2:
@@ -59,7 +59,6 @@ def main():
                 value = client.put_down()
             elif put_mode == "right":
                 value = client.put_right()
-
 
 if __name__ == "__main__":
     main()

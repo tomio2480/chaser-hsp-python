@@ -4,7 +4,7 @@ def main():
     value = []
     client = CHaser.Client()
 
-    while(True):
+    while True:
         value = client.get_ready()
 
         blank = 0
@@ -71,7 +71,7 @@ def main():
             elif dir == up:
                 value = client.walk_up()
         elif mode == "put":
-            # 実際にブロックをおく
+            # 実際にブロックを置く
             if dir == left:
                 value = client.put_left()
             elif dir == right:
